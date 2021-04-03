@@ -95,7 +95,6 @@ df_for_strive = df_for_strive[["VanID", "FirstName", "LastName", "Phone"]]
 ##### SEND TO STRIVE #####
 
 url = "https://api.strivedigital.org/"
-df.to_csv('data/sample_data.csv')
 
 headers = {
   'Content-Type': 'application/json',
