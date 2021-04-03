@@ -29,3 +29,11 @@ pip install pandas
 python welcome_text_container.py
 
 ```
+
+## Notes
+
+[Welcome Text Local](https://github.com/sunrisedatadept/a-faster-welcome-text/blob/main/welcome_text_local.py)  
+This is a local version of the script. You can use this to test the script and ensure you're successfuly sending contacts to Strive.   
+
+[Welcome Text Container](https://github.com/sunrisedatadept/a-faster-welcome-text/blob/main/welcome_text_container.py)  
+This is the container version of the script. This is what you want to point your Civic Container script to. It will not run locally. 
