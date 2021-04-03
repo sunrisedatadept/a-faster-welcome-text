@@ -27,7 +27,7 @@ This is the container version of the script. This is what you want to point your
 |--------------------|--------------------|--------------------|-------------------|---------------|
 | VAN                | VAN                | N/A                | Custom Credential | Yes           |
 | STRIVE             | STRIVE             | N/A                | Custom Credential | Yes           |
-| STRIVE_CAMPAIGN_ID | STRIVE_CAMPAIGN_ID | {Your campaign ID} | INTEGER           | YES           |
+| STRIVE_CAMPAIGN_ID | STRIVE_CAMPAIGN_ID | {Your campaign ID} | INTEGER           | Yes           |
 
 4. Connect civis to your github repository and point it appropriately.
 
