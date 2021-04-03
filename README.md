@@ -9,6 +9,14 @@ This project assumes that:
 * The person has opted in to your SMS list
 * You've set up an Automation in Strive 
 
+## Notes
+
+[Welcome Text Local](https://github.com/sunrisedatadept/a-faster-welcome-text/blob/main/welcome_text_local.py)  
+This is a local version of the script. You can use this to test the script and ensure you're successfuly sending contacts to Strive.   
+
+[Welcome Text Container](https://github.com/sunrisedatadept/a-faster-welcome-text/blob/main/welcome_text_container.py)  
+This is the container version of the script. This is what you want to point your Civic Container script to. It will not run locally. 
+
 ## Usage
 
 1. Clone this Github repository -- you'll need to specify your new url in the civis interface
@@ -39,10 +47,3 @@ Strive has a wonderful Automation feature that we're taking advantage of. **You 
 2. 
 
 
-## Notes
-
-[Welcome Text Local](https://github.com/sunrisedatadept/a-faster-welcome-text/blob/main/welcome_text_local.py)  
-This is a local version of the script. You can use this to test the script and ensure you're successfuly sending contacts to Strive.   
-
-[Welcome Text Container](https://github.com/sunrisedatadept/a-faster-welcome-text/blob/main/welcome_text_container.py)  
-This is the container version of the script. This is what you want to point your Civic Container script to. It will not run locally. 
