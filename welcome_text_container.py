@@ -13,7 +13,6 @@ import time
 from urllib.parse import urljoin
 import urllib.request
 from datetime import datetime, timedelta
-from io import StringIO  
 
 #CIVIS enviro variables
 van_key = os.environ['VAN_PASSWORD']
@@ -105,7 +104,6 @@ logger.info(f"Found, {len(df_for_strive)}, opted in contacts. Sending to Strive.
 ##### SEND TO STRIVE #####
 
 url = "https://api.strivedigital.org/"
-df.to_csv('data/sample_data.csv')
 
 headers = {
   'Content-Type': 'application/json',
