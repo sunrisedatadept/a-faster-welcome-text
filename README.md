@@ -23,14 +23,15 @@ This is the container version of the script. This is what you want to point your
 2. Create a new Container Script in Civis
 3. The following parameters must be set in the script for this to work:
 
-| PARAMETER NAME | DISPLAY NAME | DEFAULT | TYPE              | MAKE REQUIRED |
-|----------------|--------------|---------|-------------------|---------------|
-| VAN            | VAN          | N/A     | Custom Credential | Yes           |
-| STRIVE         | STRIVE       | N/A     | Custom Credential | Yes           |
+| PARAMETER NAME     | DISPLAY NAME       | DEFAULT            | TYPE              | MAKE REQUIRED |
+|--------------------|--------------------|--------------------|-------------------|---------------|
+| VAN                | VAN                | N/A                | Custom Credential | Yes           |
+| STRIVE             | STRIVE             | N/A                | Custom Credential | Yes           |
+| STRIVE_CAMPAIGN_ID | STRIVE_CAMPAIGN_ID | {Your campaign ID} | INTEGER           | YES           |
 
-Connect civis to your github repository and point it appropriately.
+4. Connect civis to your github repository and point it appropriately.
 
-Put the following in the command lines COMMAND section:
+5. Put the following in the command lines COMMAND section:
 
 ```
 pip install pandas
@@ -41,9 +42,7 @@ python welcome_text_container.py
 
 Strive has a wonderful Automation feature that we're taking advantage of. **You must first send at least 1 contact to Strive via the API for this feature to be available**. 
 
-1. Navigate to the Automation section
-![image](https://user-images.githubusercontent.com/28691023/113482997-2b14db80-946f-11eb-9924-022f8509532c.png)
-
+1. Navigate to the Automation section ont he left sidebar in your campaign.
 2. 
 
 
