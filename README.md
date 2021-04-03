@@ -29,6 +29,15 @@ pip install pandas
 python welcome_text_container.py
 
 ```
+## Strive Set Up
+
+Strive has a wonderful Automation feature that we're taking advantage of. **You must first send at least 1 contact to Strive via the API for this feature to be available**. 
+
+1. Navigate to the Automation section
+![image](https://user-images.githubusercontent.com/28691023/113482997-2b14db80-946f-11eb-9924-022f8509532c.png)
+
+2. 
+
 
 ## Notes
 
