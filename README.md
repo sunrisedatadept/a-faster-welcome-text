@@ -40,9 +40,9 @@ python welcome_text_container.py
 ```
 ## Strive Set Up
 
-Strive has a wonderful Automation feature that we're taking advantage of. **You must first send at least 1 contact to Strive via the API for this feature to be available**. 
+This script works by sending contacts to an Automation flow we've set up in Strive. **You must first send at least 1 contact to Strive via the API for this feature to be available**. We are taking advantage of the fact that Strive never sends a welcome text to the same person. 
 
-1. Navigate to the Automation section ont he left sidebar in your campaign.
-2. 
+1. Navigate to the Automation section on the left sidebar in your campaign.
+2. Automations > Integrations > New Integration
 
 
