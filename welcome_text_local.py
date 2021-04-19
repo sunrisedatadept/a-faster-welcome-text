@@ -42,10 +42,11 @@ job = "changedEntityExportJobs"
 url = urljoin(base_url, job)
 
 recent_contacts = {
-  "dateChangedFrom": 	min_time,
-  "dateChangedTo" : 	max_time,
-  "resourceType": 		"Contacts",
-  "requestedFields": 	["VanID", "FirstName", "LastName", "Phone", "PhoneOptInStatus", "DateCreated" ]
+  "dateChangedFrom": 		min_time,
+  "dateChangedTo" : 		max_time,
+  "resourceType": 			"Contacts",
+  "requestedFields": 		["VanID", "FirstName", "LastName", "Phone", "PhoneOptInStatus", "DateCreated" ].
+  "excludeChangesFromSelf": "true"
 }
 
 ##### REQUEST EXPORT JOB #####
@@ -113,8 +114,13 @@ if len(df_for_strive) != 0:
 				    "campaign_id": campaign_id,
 				    "first_name": first_name,
 				    "last_name": last_name,
-				    "opt_in": True
-				}
+				    "opt_in": True,
+				      "groups": [
+				        {
+				          "name": "EA API Member"
+				        }
+       				]
+}
 
 			response = requests.request("POST", 'https://api.strivedigital.org/members', headers=headers, data=json.dumps(payload))
 			if response.status_code == 201:
