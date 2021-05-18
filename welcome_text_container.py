@@ -37,7 +37,7 @@ logger.setLevel('INFO')
 ##### SET TIME #####
 
 max_time = datetime.now()
-fifteen_minutes  = timedelta(minutes=15)
+fifteen_minutes  = timedelta(minutes=30)
 min_time = max_time - fifteen_minutes
 
 max_time_string = max_time.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -113,23 +113,23 @@ headers = {
 }
 
 if len(df_for_strive) != 0:
-	logger.info("New folk to welcome! Let's send to Strive. They'll handle any deduping.")
+	print("New folk to welcome! Let's send to Strive. They'll handle any deduping.")
 	
-	for person in len(df_for_strive):
-			phone_number = df_for_strive['Phone']
-			first_name = df_for_strive['FirstName']
-			last_name = df_for_strive['LastName']
+	for index, row in df_for_strive.iterrows():
+			phone_number = row['Phone']
+			first_name = row['FirstName']
+			last_name = row['LastName']
 			payload = {
 				    "phone_number": phone_number,
-				    "campaign_id": 	campaign_id,
-				    "first_name": 	first_name,
-				    "last_name": 	last_name,
-				    "opt_in":		True,
+				    "campaign_id": campaign_id,
+				    "first_name": first_name,
+				    "last_name": last_name,
+				    "opt_in": True,
 				      "groups": [
-							        {
-							          "name": "EA API Member"
-							        }
-       							]
+				        {
+				          "name": "EA API Member"
+				        }
+       				]
 }
 
 			response = requests.request("POST", 'https://api.strivedigital.org/members', headers=headers, data=json.dumps(payload))
