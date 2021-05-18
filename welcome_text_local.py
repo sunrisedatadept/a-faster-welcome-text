@@ -32,20 +32,21 @@ max_time = datetime.now()
 fifteen_minutes  = timedelta(minutes=15)
 min_time = max_time - fifteen_minutes
 
-max_time = max_time.strftime("%Y-%m-%dT%H:%M:%SZ")
-min_time = min_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+max_time_string = max_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+min_time_string = min_time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 ##### REQUEST EXPORT JOB #####
+print("Starting Script!")
 base_url = 'https://api.securevan.com/v4/'
 job = "changedEntityExportJobs"
 url = urljoin(base_url, job)
 
 recent_contacts = {
-  "dateChangedFrom": 		min_time,
-  "dateChangedTo" : 		max_time,
+  "dateChangedFrom": 		min_time_string,
+  "dateChangedTo" : 		max_time_string,
   "resourceType": 			"Contacts",
-  "requestedFields": 		["VanID", "FirstName", "LastName", "Phone", "PhoneOptInStatus", "DateCreated" ].
+  "requestedFields": 		["VanID", "FirstName", "LastName", "Phone", "PhoneOptInStatus", "DateCreated" ],
   "excludeChangesFromSelf": "true"
 }
 
@@ -79,8 +80,10 @@ else:
 
 # Read in the data
 df = pd.read_csv(downloadLink)
+df.to_csv('export.csv')
 print(df.head())
 print(df['DateCreated'])
+print(f"Found, {len(df)}, modified contacts. Checking if created today.")
 
 
 # Filter for contacts that were created today
@@ -89,8 +92,12 @@ print(df['DateCreated'])
 df['DateCreated']= pd.to_datetime(df['DateCreated'])
 df_filtered = df.loc[df['DateCreated'] ==  datetime.now().date()]
 
-# Filter for contacts that have opted in. Opted in = 3
-df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 3]
+print(df_filtered.head())
+print(f"Found, {len(df_filtered)}, new contacts. Checking if they are opted in.")
+
+# Filter for contacts that have opted in. Opted in = 1
+print(df_filtered['PhoneOptInStatus'])
+df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 1]
 df_for_strive = df_for_strive[["VanID", "FirstName", "LastName", "Phone"]]
 
 ##### SEND TO STRIVE #####
