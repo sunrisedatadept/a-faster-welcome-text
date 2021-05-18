@@ -98,7 +98,7 @@ df_filtered = df.loc[df['DateCreated'] ==  datetime.now().date()]
 
 logger.info(f"Found, {len(df_filtered)}, new contacts. Checking if they are opted in.")
 
-df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 3]
+df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 1]
 df_for_strive = df_for_strive[["VanID", "FirstName", "LastName", "Phone"]]
 
 logger.info(f"Found, {len(df_for_strive)}, opted in contacts. Sending to Strive.")
