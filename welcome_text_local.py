@@ -3,16 +3,14 @@ import pandas as pd
 import requests
 from requests.auth import HTTPBasicAuth
 import time
-from parsons import Redshift, Table, VAN, S3, utilities
-from datetime import date, datetime
-from requests.exceptions import HTTPError
+from datetime import datetime
 import os
 import json 
 import time
 from urllib.parse import urljoin
-import urllib.request
 from datetime import datetime, timedelta
 import sys
+
 
 #Local enviro variables
 van_key = os.environ['VAN_API_KEY']
@@ -29,8 +27,8 @@ headers = {"headers" : "application/json"}
 ##### SET TIME #####
 
 max_time = datetime.now()
-fifteen_minutes  = timedelta(minutes=30)
-min_time = max_time - fifteen_minutes
+delta  = timedelta(hours =  4)
+min_time = max_time - delta
 
 max_time_string = max_time.strftime("%Y-%m-%dT%H:%M:%SZ")
 min_time_string = min_time.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -80,8 +78,8 @@ else:
 
 # Read in the data
 df = pd.read_csv(downloadLink)
+# Save a csv for troubleshooting
 df.to_csv('export.csv')
-print(df.head())
 print(df['DateCreated'])
 print(f"Found, {len(df)}, modified contacts. Checking if created today.")
 
@@ -89,15 +87,16 @@ print(f"Found, {len(df)}, modified contacts. Checking if created today.")
 # Filter for contacts that were created today
 # EveryAction returns a date, not a datetime, for DateCreated
 # Relying on Strive's dedupe upsert logic to not text people twice
-df['DateCreated']= pd.to_datetime(df['DateCreated'])
-df_filtered = df.loc[df['DateCreated'] ==  datetime.now().date()]
+df['DateCreated']= pd.to_datetime(df['DateCreated'], format='%Y-%m-%d')
+df_filtered = df.loc[df['DateCreated'] ==  pd.to_datetime(datetime.now().date())]
 
+print("Printing contacts created today")
 print(df_filtered.head())
 print(f"Found, {len(df_filtered)}, new contacts. Checking if they are opted in.")
 
 # Filter for contacts that have opted in. Opted in = 1
 print(df_filtered['PhoneOptInStatus'])
-df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 1]
+df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 1.0]
 df_for_strive = df_for_strive[["VanID", "FirstName", "LastName", "Phone"]]
 
 ##### SEND TO STRIVE #####
@@ -114,8 +113,16 @@ if len(df_for_strive) != 0:
 	
 	for index, row in df_for_strive.iterrows():
 			phone_number = row['Phone']
+			
 			first_name = row['FirstName']
+			if pd.isnull(first_name):
+				first_name = "Friend"
+			print(first_name)
+			
 			last_name = row['LastName']
+			if pd.isnull(last_name):
+				last_name = "Friend"
+			
 			payload = {
 				    "phone_number": phone_number,
 				    "campaign_id": campaign_id,
@@ -131,9 +138,9 @@ if len(df_for_strive) != 0:
 
 			response = requests.request("POST", 'https://api.strivedigital.org/members', headers=headers, data=json.dumps(payload))
 			if response.status_code == 201:
-				print(f"Successfully added, {first_name}, {last_name}")
+				print(f"Successfully added: {first_name} {last_name}")
 			else:
-				print(f"Error, {response.status_code}")
+				print(f"Was not able to add {first_name} {last_name} to Stive. Error: {response.status_code}")
 	
 else:
 	print("No contacts to send to Strive.")
