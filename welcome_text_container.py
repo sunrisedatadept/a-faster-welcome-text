@@ -3,15 +3,12 @@ import pandas as pd
 import requests
 from requests.auth import HTTPBasicAuth
 import time
-from parsons import Redshift, Table, VAN, S3, utilities
-from datetime import date, datetime
-from requests.exceptions import HTTPError
+from datetime import datetime
 import os
 import logging
 import json 
 import time
 from urllib.parse import urljoin
-import urllib.request
 from datetime import datetime, timedelta
 
 #CIVIS enviro variables
@@ -37,8 +34,8 @@ logger.setLevel('INFO')
 ##### SET TIME #####
 
 max_time = datetime.now()
-fifteen_minutes  = timedelta(minutes=30)
-min_time = max_time - fifteen_minutes
+delta  = timedelta(minutes=30)
+min_time = max_time - delta
 
 max_time_string = max_time.strftime("%Y-%m-%dT%H:%M:%SZ")
 min_time_string = min_time.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -93,12 +90,13 @@ logger.info(f"Found, {len(df)}, modified contacts. Checking if created today.")
 # Filter for contacts that were created today
 # EveryAction returns a date, not a datetime, for DateCreated
 # Relying on Strive's dedupe upsert logic to not text people twice
-df['DateCreated']= pd.to_datetime(df['DateCreated'])
-df_filtered = df.loc[df['DateCreated'] ==  datetime.now().date()]
+df['DateCreated']= pd.to_datetime(df['DateCreated'], format='%Y-%m-%d')
+df_filtered = df.loc[df['DateCreated'] ==  pd.to_datetime(datetime.now().date())]
 
 logger.info(f"Found, {len(df_filtered)}, new contacts. Checking if they are opted in.")
 
-df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 1]
+# Check for SMS opt in
+df_for_strive = df_filtered.loc[df_filtered['PhoneOptInStatus'] == 1.0]
 df_for_strive = df_for_strive[["VanID", "FirstName", "LastName", "Phone"]]
 
 logger.info(f"Found, {len(df_for_strive)}, opted in contacts. Sending to Strive.")
@@ -117,8 +115,16 @@ if len(df_for_strive) != 0:
 	
 	for index, row in df_for_strive.iterrows():
 			phone_number = row['Phone']
+			
 			first_name = row['FirstName']
+			# Assign Friend as first name if missing
+			if pd.isnull(first_name):
+				first_name = "Friend"
+			
 			last_name = row['LastName']
+			# Assign Friend as last name if missing
+			if pd.isnull(last_name):
+				last_name = "Friend"
 			payload = {
 				    "phone_number": phone_number,
 				    "campaign_id": campaign_id,
@@ -134,9 +140,9 @@ if len(df_for_strive) != 0:
 
 			response = requests.request("POST", 'https://api.strivedigital.org/members', headers=headers, data=json.dumps(payload))
 			if response.status_code == 201:
-				logger.info(f"Successfully added, {first_name}, {last_name}")
+				logger.info(f"Successfully added: {first_name} {last_name}")
 			else:
-				logger.info(f"Error, {response.status_code}")
+				logger.info(f"Was not able to add {first_name} {last_name} to Stive. Error {response.status_code}")
 	
 else:
 	logger.info("No contacts to send to Strive.")
