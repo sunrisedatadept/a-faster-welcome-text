@@ -5,6 +5,7 @@ from requests.auth import HTTPBasicAuth
 import time
 from datetime import datetime
 import os
+import logging
 import json
 import time
 from urllib.parse import urljoin
@@ -14,10 +15,11 @@ import sys
 # Set parameters
 delta  = timedelta(hours =  4) ## Set this to the frequency of your Container Script
 
-# Set local environmental variables
-van_key = os.environ['VAN_API_KEY']
-strive_key = os.environ['STRIVE_KEY']
+#CIVIS enviro variables
+van_key = os.environ['VAN_PASSWORD']
+strive_key = os.environ['STRIVE_PASSWORD']
 campaign_id = os.environ['STRIVE_CAMPAIGN_ID']
+
 
 # Set EA API credentials
 username = 'welcometext'  ## This can be anything
@@ -162,7 +164,7 @@ def send_contacts_to_strive(df_for_strive):
 			        {
 			          "name": "EA API Member"
 			        }
-   				]
+   				  ]
                 }
         response = requests.request("POST", 'https://api.strivedigital.org/members', headers = strive_headers, data = json.dumps(payload))
         if response.status_code == 201:
